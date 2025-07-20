@@ -7,7 +7,7 @@ export default function OriginalVRButtonsBlock() {
         'Entorno de realidad aumentada',
         'Renderizado 3D interactivo',
         'Simulación inmersiva',
-      ].map((txt, idx) => (
+      ].map((txt) => (
         <button
           key={txt}
           className="group relative overflow-hidden rounded-full px-9 py-4 min-w-[260px] font-work-sans text-lg font-semibold text-white transition-transform duration-200"

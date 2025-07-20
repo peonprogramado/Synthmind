@@ -8,12 +8,12 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lottie from "lottie-react";
 import GradientText from "./GradientText";
 import VRVerticalButtons, { BUTTONS } from "./VRVerticalButtons";
-import OriginalVRButtonsBlock from "./OriginalVRButtonsBlock";
-import { AnimatePresence, motion, useScroll, useTransform, useSpring, useMotionValue, useInView } from 'framer-motion';
+
+import { AnimatePresence, motion, useScroll, useTransform, useSpring } from 'framer-motion';
 
 gsap.registerPlugin(SplitText, ScrollTrigger);
 
-export default function MaskedTexts({ onAfterVRText }: { onAfterVRText?: React.ReactNode }) {
+export default function MaskedTexts() {
   const [selectedIdx, setSelectedIdx] = useState(0);
 
   const maskedTechRef = useRef<HTMLSpanElement | null>(null);
@@ -163,11 +163,11 @@ export default function MaskedTexts({ onAfterVRText }: { onAfterVRText?: React.R
   const titleRef = useRef<HTMLHeadingElement | null>(null);
   const paragraphRef = useRef<HTMLParagraphElement | null>(null);
   const buttonRef = useRef<HTMLAnchorElement | null>(null);
-  const [lottieData, setLottieData] = useState<any>(null);
+  const [lottieData, setLottieData] = useState<object | null>(null);
   const [lottieError, setLottieError] = useState(false);
-  const [lottieData1, setLottieData1] = useState<any>(null);
+  const [lottieData1, setLottieData1] = useState<object | null>(null);
   const [lottieError1, setLottieError1] = useState(false);
-  const [lottieData2, setLottieData2] = useState<any>(null);
+  const [lottieData2, setLottieData2] = useState<object | null>(null);
   const [lottieError2, setLottieError2] = useState(false);
   const cardRefs = [useRef<HTMLDivElement | null>(null), useRef<HTMLDivElement | null>(null), useRef<HTMLDivElement | null>(null)];
   const cardTitleRefs = [useRef<HTMLHeadingElement | null>(null), useRef<HTMLHeadingElement | null>(null), useRef<HTMLHeadingElement | null>(null)];
@@ -293,11 +293,11 @@ export default function MaskedTexts({ onAfterVRText }: { onAfterVRText?: React.R
       function animateContent() {
         if (!title || !text) return;
         // TÍTULO
-        const titleSplit = SplitText.create(title, {
-          type: 'lines',
-          mask: 'lines',
-          linesClass: 'line'
-        });
+        // const titleSplit = SplitText.create(title, {
+        //   type: 'lines',
+        //   mask: 'lines',
+        //   linesClass: 'line'
+        // });
         const titleLines = title.querySelectorAll('.line');
         gsap.set(titleLines, { yPercent: 110, opacity: 0 });
         gsap.to(titleLines, {
@@ -308,11 +308,11 @@ export default function MaskedTexts({ onAfterVRText }: { onAfterVRText?: React.R
           ease: 'power2.out'
         });
         // TEXTO
-        const textSplit = SplitText.create(text, {
-          type: 'lines',
-          mask: 'lines',
-          linesClass: 'line'
-        });
+        // const textSplit = SplitText.create(text, {
+        //   type: 'lines',
+        //   mask: 'lines',
+        //   linesClass: 'line'
+        // });
         const textLines = text.querySelectorAll('.line');
         gsap.set(textLines, { yPercent: 110, opacity: 0 });
         gsap.to(textLines, {
@@ -335,17 +335,18 @@ export default function MaskedTexts({ onAfterVRText }: { onAfterVRText?: React.R
         }
       }
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     // Animación masked para el titular del div gris
     const greyTitle = document.getElementById('grey-section-title');
     if (greyTitle) {
-      const split = SplitText.create(greyTitle, {
-        type: 'lines',
-        mask: 'lines',
-        linesClass: 'line'
-      });
+      // const split = SplitText.create(greyTitle, {
+      //   type: 'lines',
+      //   mask: 'lines',
+      //   linesClass: 'line'
+      // });
       const lines = greyTitle.querySelectorAll('.line');
       gsap.set(lines, { yPercent: 110, opacity: 0 });
       gsap.to(lines, {
@@ -364,11 +365,11 @@ export default function MaskedTexts({ onAfterVRText }: { onAfterVRText?: React.R
     // Animación masked para el texto debajo del titular
     const greyText = document.getElementById('grey-section-text');
     if (greyText) {
-      const split = SplitText.create(greyText, {
-        type: 'lines',
-        mask: 'lines',
-        linesClass: 'line'
-      });
+      // const split = SplitText.create(greyText, {
+      //   type: 'lines',
+      //   mask: 'lines',
+      //   linesClass: 'line'
+      // });
       const lines = greyText.querySelectorAll('.line');
       gsap.set(lines, { yPercent: 110, opacity: 0 });
       gsap.to(lines, {
@@ -573,15 +574,14 @@ export default function MaskedTexts({ onAfterVRText }: { onAfterVRText?: React.R
         </div>
         {/* Video superpuesto a la derecha */}
         <div id="expanding-video" style={{ position: 'absolute', top: '120px', right: 0, width: '659px', height: '760px', display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-end', pointerEvents: 'none', paddingRight: '50px', transition: 'width 1s, left 1s, border-radius 1s' }}>
-          <video
-            src="/videos/8762941-uhd_3840_2160_25fps.mp4"
+          <iframe
+            src={`https://www.youtube.com/embed/058HDzBkycc?autoplay=1&mute=1&loop=1&playlist=058HDzBkycc&controls=0&showinfo=0&rel=0&modestbranding=1`}
             width="659"
             height="760"
-            style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '18px' }}
-            autoPlay
-            loop
-            muted
-            playsInline
+            style={{ width: '100%', height: '100%', borderRadius: '18px' }}
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
           />
         </div>
       </div>
@@ -658,8 +658,8 @@ export default function MaskedTexts({ onAfterVRText }: { onAfterVRText?: React.R
 
 function StickyAnimatedVideo() {
   const ref = useRef(null);
-  const blackDivRef = useRef(null);
-  const isBlackDivInView = useInView(blackDivRef, { margin: '-100px 0px -100px 0px', amount: 0.1 });
+  // const blackDivRef = useRef(null);
+  // const isBlackDivInView = useInView(blackDivRef, { margin: '-100px 0px -100px 0px', amount: 0.1 });
   // Offset de scroll suave para evitar glitches
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start center", "end 80%"] });
 
@@ -670,13 +670,13 @@ function StickyAnimatedVideo() {
   }, []);
 
   // Detectar si el video está expandido
-  const [isExpanded, setIsExpanded] = useState(false);
-  useEffect(() => {
-    const unsubscribe = scrollYProgress.onChange((v) => {
-      setIsExpanded(v > 0.98);
-    });
-    return () => unsubscribe();
-  }, [scrollYProgress]);
+  // const [isExpanded, setIsExpanded] = useState(false);
+  // useEffect(() => {
+  //   const unsubscribe = scrollYProgress.onChange((v) => {
+  //     setIsExpanded(v > 0.98);
+  //   });
+  //   return () => unsubscribe();
+  // }, [scrollYProgress]);
 
   // El tamaño del video siempre depende de scrollYProgress
   const animatedMaxWidth = useSpring(
@@ -687,10 +687,10 @@ function StickyAnimatedVideo() {
 
   // Estado para el video actual
   const [videoIdx, setVideoIdx] = useState(0);
-  const videos = [
-    "/videos/8762889-uhd_3840_2160_25fps.mp4",
-    "/videos/18069862-uhd_3840_2160_24fps.mp4",
-    "/videos/11904085_3840_2160_24fps.mp4"
+  const videos: VideoItem[] = [
+    { type: 'youtube' as const, id: 'bzyZXVZq5qE' },
+    { type: 'youtube' as const, id: '058HDzBkycc' },
+    { type: 'youtube' as const, id: 'zys1iv6BKcA' }
   ];
   const videoTitles = [
     "Diseño de entorno de Realidad Virtual para videojuego de Nintendo",
@@ -728,29 +728,50 @@ function StickyAnimatedVideo() {
 }
 
 // VideoContent ahora es un componente puro, sin hooks
+type VideoItem = 
+  | { type: 'local'; src: string }
+  | { type: 'youtube'; id: string };
+
 interface VideoContentProps {
   videoIdx: number;
-  videos: string[];
+  videos: VideoItem[];
   videoTitles: string[];
 }
 function VideoContent({ videoIdx, videos, videoTitles }: VideoContentProps) {
+  const currentVideo = videos[videoIdx];
+  
   return (
     <>
       <AnimatePresence mode="wait">
-        <motion.video
-          key={videoIdx}
-          src={videos[videoIdx]}
-          className="w-full h-full object-cover block aspect-[16/9]"
-          autoPlay
-          loop
-          muted
-          playsInline
-          controls={false}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 1 }}
-        />
+        {currentVideo.type === 'local' ? (
+          <motion.video
+            key={videoIdx}
+            src={currentVideo.src}
+            className="w-full h-full object-cover block aspect-[16/9]"
+            autoPlay
+            loop
+            muted
+            playsInline
+            controls={false}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1 }}
+          />
+        ) : (
+          <motion.iframe
+            key={videoIdx}
+            src={`https://www.youtube.com/embed/${currentVideo.id}?autoplay=1&mute=1&loop=1&playlist=${currentVideo.id}&controls=0&showinfo=0&rel=0&modestbranding=1`}
+            className="w-full h-full block aspect-[16/9]"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1 }}
+          />
+        )}
       </AnimatePresence>
       <AnimatePresence mode="wait">
         <motion.div

@@ -5,7 +5,7 @@ import NavbarMasked from "../components/NavbarMasked";
 import MaskedHeading from "../components/MaskedHeading";
 import MaskedImage from "../components/MaskedImage";
 import MaskedTexts from "../components/MaskedTexts";
-import ButtonScrollToBlackSection from "../components/ButtonScrollToBlackSection";
+
 
 export default function Page() {
   return (
@@ -36,7 +36,7 @@ export default function Page() {
           {/* White background section */}
           <div id="proyecto" className="absolute top-[1000px] md:top-[1050px] lg:top-[1100px] left-0 right-0 h-[900px] bg-white relative z-0">
             <div className="px-[50px] h-full flex flex-col justify-start pt-[90px]">
-              <MaskedTexts onAfterVRText={null} />
+              <MaskedTexts />
             </div>
           </div>
         </div>

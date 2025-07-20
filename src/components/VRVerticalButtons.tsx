@@ -1,5 +1,5 @@
 // Botones verticales personalizados para la sección de Realidad Virtual
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
@@ -36,7 +36,7 @@ export default function VRVerticalButtons({ selectedIdx, setSelectedIdx }: VRVer
     const containerRef = useRef<HTMLDivElement>(null);
     const btnRefs = useRef<(HTMLButtonElement | null)[]>([]);
     const maskRef = useRef<HTMLDivElement | null>(null);
-    const imgRef = useRef<HTMLImageElement | null>(null);
+    // const imgRef = useRef<HTMLImageElement | null>(null);
 
 
     // Animación masked reveal horizontal al hacer scroll O cambio de imagen
