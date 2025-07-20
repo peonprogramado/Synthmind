@@ -11,6 +11,7 @@ import VRVerticalButtons, { BUTTONS } from "./VRVerticalButtons";
 
 import { AnimatePresence, motion, useScroll, useTransform, useSpring } from 'framer-motion';
 
+
 gsap.registerPlugin(SplitText, ScrollTrigger);
 
 export default function MaskedTexts() {
@@ -761,10 +762,11 @@ function VideoContent({ videoIdx, videos, videoTitles }: VideoContentProps) {
         ) : (
           <motion.iframe
             key={videoIdx}
-            src={`https://www.youtube.com/embed/${currentVideo.id}?autoplay=1&mute=1&loop=1&playlist=${currentVideo.id}&controls=0&showinfo=0&rel=0&modestbranding=1`}
+            src={`https://www.youtube-nocookie.com/embed/${currentVideo.id}?autoplay=1&mute=1&loop=1&playlist=${currentVideo.id}&controls=0&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3&cc_load_policy=0&fs=0&disablekb=1`}
             className="w-full h-full block aspect-[16/9]"
             frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerPolicy="strict-origin-when-cross-origin"
             allowFullScreen
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
