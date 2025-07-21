@@ -20,13 +20,13 @@ function HybridVideoPlayer() {
   const [videoError, setVideoError] = useState(false);
 
   const handleVideoError = () => {
-    console.log('Local video failed, switching to YouTube fallback');
+    console.log('Vercel Blob video failed, switching to YouTube fallback');
     setVideoError(true);
     setUseYouTube(true);
   };
 
   const handleVideoLoad = () => {
-    console.log('Local video loaded successfully');
+    console.log('Vercel Blob video loaded successfully');
     setVideoError(false);
   };
 
@@ -60,9 +60,9 @@ function HybridVideoPlayer() {
         controls={false}
         onError={handleVideoError}
         onLoadedData={handleVideoLoad}
-        onCanPlay={() => console.log('Local video can play')}
+        onCanPlay={() => console.log('Vercel Blob video can play')}
       >
-        <source src="/videos/8762941-uhd_3840_2160_25fps.mp4" type="video/mp4" />
+        <source src="https://osrsbb69ubtntroe.public.blob.vercel-storage.com/8762941-uhd_3840_2160_25fps.mp4" type="video/mp4" />
         {/* Fallback para navegadores que no soportan video */}
         Tu navegador no soporta el elemento video.
       </video>
@@ -85,7 +85,7 @@ function HybridVideoPlayer() {
         onClick={() => setUseYouTube(true)}
         >
           <div style={{ textAlign: 'center' }}>
-            <div>Error cargando video local</div>
+            <div>Error cargando video desde Vercel Blob</div>
             <div style={{ fontSize: '12px', marginTop: '8px', opacity: 0.8 }}>Click para usar YouTube</div>
           </div>
         </div>
