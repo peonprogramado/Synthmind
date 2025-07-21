@@ -20,7 +20,14 @@ function HybridVideoPlayer() {
   const [videoError, setVideoError] = useState(false);
   
   const handleVideoError = (e: any) => {
-    console.warn('Video failed to load from Vercel Blob, switching to YouTube fallback');
+    console.error('🚨 VERCEL BLOB VIDEO ERROR:');
+    console.error('Error event:', e);
+    console.error('Error code:', e.target?.error?.code);
+    console.error('Error message:', e.target?.error?.message);
+    console.error('Video src:', e.target?.src);
+    console.error('Network state:', e.target?.networkState);
+    console.error('Ready state:', e.target?.readyState);
+    console.warn('Switching to YouTube fallback');
     setVideoError(true);
     setUseYouTube(true);
   };
@@ -57,13 +64,12 @@ function HybridVideoPlayer() {
         playsInline
         preload="metadata"
         controls={false}
-        crossOrigin="anonymous"
         onError={handleVideoError}
         onLoadedData={handleVideoLoad}
       >
-        {/* Vercel Blob Storage URL with CORS */}
+        {/* Vercel Blob Storage as primary (URL is accessible) */}
         <source src="https://osrsbb69ubtntroe.public.blob.vercel-storage.com/8762941-uhd_3840_2160_25fps.mp4" type="video/mp4" />
-        {/* Local video fallback */}
+        {/* Local video as fallback */}
         <source src="/videos/8762941-uhd_3840_2160_25fps.mp4" type="video/mp4" />
         {/* Fallback para navegadores que no soportan video */}
         <div style={{ color: 'white', padding: '20px', textAlign: 'center' }}>
