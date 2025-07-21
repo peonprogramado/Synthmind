@@ -294,11 +294,11 @@ export default function MaskedTexts() {
       function animateContent() {
         if (!title || !text) return;
         // TÍTULO
-        // const titleSplit = SplitText.create(title, {
-        //   type: 'lines',
-        //   mask: 'lines',
-        //   linesClass: 'line'
-        // });
+        const titleSplit = SplitText.create(title, {
+          type: 'lines',
+          mask: 'lines',
+          linesClass: 'line'
+        });
         const titleLines = title.querySelectorAll('.line');
         gsap.set(titleLines, { yPercent: 110, opacity: 0 });
         gsap.to(titleLines, {
@@ -309,11 +309,11 @@ export default function MaskedTexts() {
           ease: 'power2.out'
         });
         // TEXTO
-        // const textSplit = SplitText.create(text, {
-        //   type: 'lines',
-        //   mask: 'lines',
-        //   linesClass: 'line'
-        // });
+        const textSplit = SplitText.create(text, {
+          type: 'lines',
+          mask: 'lines',
+          linesClass: 'line'
+        });
         const textLines = text.querySelectorAll('.line');
         gsap.set(textLines, { yPercent: 110, opacity: 0 });
         gsap.to(textLines, {
@@ -343,11 +343,11 @@ export default function MaskedTexts() {
     // Animación masked para el titular del div gris
     const greyTitle = document.getElementById('grey-section-title');
     if (greyTitle) {
-      // const split = SplitText.create(greyTitle, {
-      //   type: 'lines',
-      //   mask: 'lines',
-      //   linesClass: 'line'
-      // });
+      const split = SplitText.create(greyTitle, {
+        type: 'lines',
+        mask: 'lines',
+        linesClass: 'line'
+      });
       const lines = greyTitle.querySelectorAll('.line');
       gsap.set(lines, { yPercent: 110, opacity: 0 });
       gsap.to(lines, {
@@ -366,11 +366,11 @@ export default function MaskedTexts() {
     // Animación masked para el texto debajo del titular
     const greyText = document.getElementById('grey-section-text');
     if (greyText) {
-      // const split = SplitText.create(greyText, {
-      //   type: 'lines',
-      //   mask: 'lines',
-      //   linesClass: 'line'
-      // });
+      const split = SplitText.create(greyText, {
+        type: 'lines',
+        mask: 'lines',
+        linesClass: 'line'
+      });
       const lines = greyText.querySelectorAll('.line');
       gsap.set(lines, { yPercent: 110, opacity: 0 });
       gsap.to(lines, {
@@ -575,14 +575,16 @@ export default function MaskedTexts() {
         </div>
         {/* Video superpuesto a la derecha */}
         <div id="expanding-video" style={{ position: 'absolute', top: '120px', right: 0, width: '659px', height: '760px', display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-end', pointerEvents: 'none', paddingRight: '50px', transition: 'width 1s, left 1s, border-radius 1s' }}>
-          <iframe
-            src={`https://www.youtube.com/embed/058HDzBkycc?autoplay=1&mute=1&loop=1&playlist=058HDzBkycc&controls=0&showinfo=0&rel=0&modestbranding=1`}
+          <video
+            src="/videos/8762941-uhd_3840_2160_25fps.mp4"
             width="659"
             height="760"
-            style={{ width: '100%', height: '100%', borderRadius: '18px' }}
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
+            style={{ width: '100%', height: '100%', borderRadius: '18px', objectFit: 'cover' }}
+            autoPlay
+            loop
+            muted
+            playsInline
+            controls={false}
           />
         </div>
       </div>
@@ -760,19 +762,38 @@ function VideoContent({ videoIdx, videos, videoTitles }: VideoContentProps) {
             transition={{ duration: 1 }}
           />
         ) : (
-          <motion.iframe
+          <motion.div
             key={videoIdx}
-            src={`https://www.youtube-nocookie.com/embed/${currentVideo.id}?autoplay=1&mute=1&loop=1&playlist=${currentVideo.id}&controls=0&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3&cc_load_policy=0&fs=0&disablekb=1`}
-            className="w-full h-full block aspect-[16/9]"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerPolicy="strict-origin-when-cross-origin"
-            allowFullScreen
+            className="w-full h-full block aspect-[16/9] relative"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 1 }}
-          />
+          >
+            <iframe
+              src={`https://www.youtube.com/embed/${currentVideo.id}?autoplay=1&mute=1&loop=1&playlist=${currentVideo.id}&controls=0&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3&cc_load_policy=0&fs=0&disablekb=1&enablejsapi=1`}
+              className="w-full h-full block aspect-[16/9]"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerPolicy="strict-origin-when-cross-origin"
+              allowFullScreen
+              onError={() => console.log(`Error loading video: ${currentVideo.id}`)}
+            />
+            {/* Fallback overlay for unavailable videos */}
+            <div className="absolute inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
+              <div className="text-white text-center p-4">
+                <div className="text-sm opacity-75">Si el video no se muestra:</div>
+                <a 
+                  href={`https://www.youtube.com/watch?v=${currentVideo.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-400 hover:text-blue-300 underline text-sm mt-2 block"
+                >
+                  Ver en YouTube ↗
+                </a>
+              </div>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
       <AnimatePresence mode="wait">
