@@ -576,7 +576,6 @@ export default function MaskedTexts() {
         {/* Video superpuesto a la derecha */}
         <div id="expanding-video" style={{ position: 'absolute', top: '120px', right: 0, width: '659px', height: '760px', display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-end', pointerEvents: 'none', paddingRight: '50px', transition: 'width 1s, left 1s, border-radius 1s' }}>
           <video
-            src="/videos/8762941-uhd_3840_2160_25fps.mp4"
             width="659"
             height="760"
             style={{ width: '100%', height: '100%', borderRadius: '18px', objectFit: 'cover' }}
@@ -584,8 +583,36 @@ export default function MaskedTexts() {
             loop
             muted
             playsInline
+            preload="auto"
             controls={false}
-          />
+            onError={(e) => {
+              console.error('Error loading video:', e);
+              // Fallback: try to reload the video
+              const video = e.target as HTMLVideoElement;
+              setTimeout(() => {
+                video.load();
+              }, 1000);
+            }}
+            onLoadStart={() => console.log('Video loading started')}
+            onCanPlay={() => console.log('Video can play')}
+            onLoadedData={() => console.log('Video data loaded')}
+          >
+            <source src="/videos/8762941-uhd_3840_2160_25fps.mp4" type="video/mp4" />
+            {/* Fallback message */}
+            <div style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              width: '100%', 
+              height: '100%', 
+              backgroundColor: '#f0f0f0',
+              borderRadius: '18px',
+              color: '#666',
+              fontSize: '14px'
+            }}>
+              Video no disponible
+            </div>
+          </video>
         </div>
       </div>
       {/* Espaciador de 100px entre el video sticky y el div negro (fondo blanco a todo lo ancho y centrado) */}

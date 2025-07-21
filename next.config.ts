@@ -19,13 +19,27 @@ const nextConfig: NextConfig = {
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' https://i.ytimg.com https://img.youtube.com data: blob:",
               "connect-src 'self' https://www.youtube.com https://youtube.com https://www.youtube-nocookie.com",
-              "media-src 'self' https://www.youtube.com https://youtube.com https://www.youtube-nocookie.com blob:",
+              "media-src 'self' data: blob: https://www.youtube.com https://youtube.com https://www.youtube-nocookie.com",
               "font-src 'self' data:",
               "object-src 'none'",
               "base-uri 'self'",
               "form-action 'self'"
             ].join("; ")
           },
+        ],
+      },
+      {
+        // Headers específicos para archivos de video
+        source: "/videos/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable"
+          },
+          {
+            key: "Content-Type",
+            value: "video/mp4"
+          }
         ],
       },
     ];
