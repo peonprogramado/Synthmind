@@ -14,6 +14,86 @@ import { AnimatePresence, motion, useScroll, useTransform, useSpring } from 'fra
 
 gsap.registerPlugin(SplitText, ScrollTrigger);
 
+// Componente híbrido de video con fallback
+function HybridVideoPlayer() {
+  const [useYouTube, setUseYouTube] = useState(false);
+  const [videoError, setVideoError] = useState(false);
+
+  const handleVideoError = () => {
+    console.log('Local video failed, switching to YouTube fallback');
+    setVideoError(true);
+    setUseYouTube(true);
+  };
+
+  const handleVideoLoad = () => {
+    console.log('Local video loaded successfully');
+    setVideoError(false);
+  };
+
+  if (useYouTube) {
+    return (
+      <div id="expanding-video" style={{ position: 'absolute', top: '120px', right: 0, width: '659px', height: '760px', display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-end', pointerEvents: 'none', paddingRight: '50px', transition: 'width 1s, left 1s, border-radius 1s' }}>
+        <iframe
+          src="https://www.youtube.com/embed/058HDzBkycc?autoplay=1&mute=1&loop=1&playlist=058HDzBkycc&controls=0&showinfo=0&rel=0&modestbranding=1"
+          width="659"
+          height="760"
+          style={{ width: '100%', height: '100%', borderRadius: '18px' }}
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div id="expanding-video" style={{ position: 'absolute', top: '120px', right: 0, width: '659px', height: '760px', display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-end', pointerEvents: 'none', paddingRight: '50px', transition: 'width 1s, left 1s, border-radius 1s' }}>
+      <video
+        width="659"
+        height="760"
+        style={{ width: '100%', height: '100%', borderRadius: '18px', objectFit: 'cover' }}
+        autoPlay
+        loop
+        muted
+        playsInline
+        preload="metadata"
+        controls={false}
+        onError={handleVideoError}
+        onLoadedData={handleVideoLoad}
+        onCanPlay={() => console.log('Local video can play')}
+      >
+        <source src="/videos/8762941-uhd_3840_2160_25fps.mp4" type="video/mp4" />
+        {/* Fallback para navegadores que no soportan video */}
+        Tu navegador no soporta el elemento video.
+      </video>
+      {videoError && (
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          backgroundColor: 'rgba(0,0,0,0.8)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderRadius: '18px',
+          color: 'white',
+          fontSize: '14px',
+          cursor: 'pointer'
+        }}
+        onClick={() => setUseYouTube(true)}
+        >
+          <div style={{ textAlign: 'center' }}>
+            <div>Error cargando video local</div>
+            <div style={{ fontSize: '12px', marginTop: '8px', opacity: 0.8 }}>Click para usar YouTube</div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function MaskedTexts() {
   const [selectedIdx, setSelectedIdx] = useState(0);
 
@@ -573,47 +653,8 @@ export default function MaskedTexts() {
             <StickyAnimatedVideo />
           </div>
         </div>
-        {/* Video superpuesto a la derecha */}
-        <div id="expanding-video" style={{ position: 'absolute', top: '120px', right: 0, width: '659px', height: '760px', display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-end', pointerEvents: 'none', paddingRight: '50px', transition: 'width 1s, left 1s, border-radius 1s' }}>
-          <video
-            width="659"
-            height="760"
-            style={{ width: '100%', height: '100%', borderRadius: '18px', objectFit: 'cover' }}
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="auto"
-            controls={false}
-            onError={(e) => {
-              console.error('Error loading video:', e);
-              // Fallback: try to reload the video
-              const video = e.target as HTMLVideoElement;
-              setTimeout(() => {
-                video.load();
-              }, 1000);
-            }}
-            onLoadStart={() => console.log('Video loading started')}
-            onCanPlay={() => console.log('Video can play')}
-            onLoadedData={() => console.log('Video data loaded')}
-          >
-            <source src="/videos/8762941-uhd_3840_2160_25fps.mp4" type="video/mp4" />
-            {/* Fallback message */}
-            <div style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center', 
-              width: '100%', 
-              height: '100%', 
-              backgroundColor: '#f0f0f0',
-              borderRadius: '18px',
-              color: '#666',
-              fontSize: '14px'
-            }}>
-              Video no disponible
-            </div>
-          </video>
-        </div>
+        {/* Video superpuesto a la derecha - Híbrido con fallback */}
+        <HybridVideoPlayer />
       </div>
       {/* Espaciador de 100px entre el video sticky y el div negro (fondo blanco a todo lo ancho y centrado) */}
       <div className="relative w-full h-[100px] flex items-center justify-center">
