@@ -18,15 +18,14 @@ gsap.registerPlugin(SplitText, ScrollTrigger);
 function HybridVideoPlayer() {
   const [useYouTube, setUseYouTube] = useState(false);
   const [videoError, setVideoError] = useState(false);
-
-  const handleVideoError = () => {
-    console.log('Vercel Blob video failed, switching to YouTube fallback');
+  
+  const handleVideoError = (e: any) => {
+    console.warn('Video failed to load from Vercel Blob, switching to YouTube fallback');
     setVideoError(true);
     setUseYouTube(true);
   };
 
   const handleVideoLoad = () => {
-    console.log('Vercel Blob video loaded successfully');
     setVideoError(false);
   };
 
@@ -51,20 +50,26 @@ function HybridVideoPlayer() {
       <video
         width="659"
         height="760"
-        style={{ width: '100%', height: '100%', borderRadius: '18px', objectFit: 'cover' }}
+        style={{ width: '100%', height: '100%', borderRadius: '18px', objectFit: 'cover', backgroundColor: 'black' }}
         autoPlay
         loop
         muted
         playsInline
         preload="metadata"
         controls={false}
+        crossOrigin="anonymous"
         onError={handleVideoError}
         onLoadedData={handleVideoLoad}
-        onCanPlay={() => console.log('Vercel Blob video can play')}
       >
+        {/* Vercel Blob Storage URL with CORS */}
         <source src="https://osrsbb69ubtntroe.public.blob.vercel-storage.com/8762941-uhd_3840_2160_25fps.mp4" type="video/mp4" />
+        {/* Local video fallback */}
+        <source src="/videos/8762941-uhd_3840_2160_25fps.mp4" type="video/mp4" />
         {/* Fallback para navegadores que no soportan video */}
-        Tu navegador no soporta el elemento video.
+        <div style={{ color: 'white', padding: '20px', textAlign: 'center' }}>
+          Video no disponible<br/>
+          <small>URL: https://osrsbb69ubtntroe.public.blob.vercel-storage.com/8762941-uhd_3840_2160_25fps.mp4</small>
+        </div>
       </video>
       {videoError && (
         <div style={{
@@ -611,7 +616,8 @@ export default function MaskedTexts() {
             paddingTop: '180px',
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'flex-start'
+            alignItems: 'flex-start',
+            position: 'relative'
           }}
         >
           <div
