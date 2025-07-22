@@ -14,85 +14,14 @@ import { AnimatePresence, motion, useScroll, useTransform, useSpring } from 'fra
 
 gsap.registerPlugin(SplitText, ScrollTrigger);
 
-// Componente híbrido de video con fallback
+// Componente de video para 8762941-uhd_3840_2160_25fps.mp4
 function HybridVideoPlayer() {
-  const [useYouTube, setUseYouTube] = useState(false);
-  const [videoError, setVideoError] = useState(false);
-  const [debugInfo, setDebugInfo] = useState('Initializing...');
-  
-  // Debug: Log cuando el componente se monta
-  useEffect(() => {
-    console.log('🎥 HybridVideoPlayer mounted in environment:', process.env.NODE_ENV);
-    console.log('🎥 Current URL:', window.location.href);
-    setDebugInfo('Component mounted');
-    
-    // Timeout para detectar si el video nunca carga (pantalla negra)
-    const timeout = setTimeout(() => {
-      if (!useYouTube && !videoError) {
-        console.warn('⏰ Video loading timeout - switching to YouTube');
-        setDebugInfo('Loading timeout - using YouTube');
-        setUseYouTube(true);
-      }
-    }, 10000); // 10 segundos
-    
-    return () => clearTimeout(timeout);
-  }, [useYouTube, videoError]);
-  
-  const handleVideoError = (e: any) => {
-    console.error('🚨 VIDEO ERROR:');
-    console.error('Error event:', e);
-    console.error('Error code:', e.target?.error?.code);
-    console.error('Error message:', e.target?.error?.message);
-    console.error('Video src:', e.target?.src);
-    console.error('Network state:', e.target?.networkState);
-    console.error('Ready state:', e.target?.readyState);
-    
-    // Check if it's a network error (404, etc.)
-    const errorCode = e.target?.error?.code;
-    if (errorCode === 4 || e.target?.networkState === 3) {
-      console.warn('🌐 Network error detected - switching to YouTube fallback');
-      setDebugInfo(`Network error (${errorCode}) - using YouTube`);
-      setUseYouTube(true);
-    } else {
-      console.warn('📹 Video format/codec error - keeping video element');
-      setDebugInfo(`Video error: ${errorCode || 'Unknown'}`);
-    }
-    setVideoError(true);
-  };
-
   const handleVideoLoad = () => {
     console.log('✅ Video loaded successfully!');
-    setDebugInfo('Video loaded successfully');
-    setVideoError(false);
   };
-  
-  const handleVideoLoadStart = () => {
-    console.log('🔄 Video load started');
-    setDebugInfo('Video loading started...');
-  };
-
-  if (useYouTube) {
-    return (
-      <div id="expanding-video" style={{ position: 'absolute', top: '120px', right: 0, width: '659px', height: '760px', display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-end', pointerEvents: 'none', paddingRight: '50px', transition: 'width 1s, left 1s, border-radius 1s' }}>
-        <iframe
-          src="https://www.youtube.com/embed/058HDzBkycc?autoplay=1&mute=1&loop=1&playlist=058HDzBkycc&controls=0&showinfo=0&rel=0&modestbranding=1"
-          width="659"
-          height="760"
-          style={{ width: '100%', height: '100%', borderRadius: '18px' }}
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        />
-      </div>
-    );
-  }
 
   return (
     <div id="expanding-video" style={{ position: 'absolute', top: '120px', right: 0, width: '659px', height: '760px', display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-end', pointerEvents: 'none', paddingRight: '50px', transition: 'width 1s, left 1s, border-radius 1s' }}>
-      {/* Debug indicator */}
-      <div style={{ position: 'absolute', top: '-30px', right: '0', background: 'red', color: 'white', padding: '5px', fontSize: '12px', zIndex: 9999 }}>
-        {debugInfo} | YT: {useYouTube ? 'YES' : 'NO'} | Err: {videoError ? 'YES' : 'NO'}
-      </div>
       <video
         width="659"
         height="760"
@@ -103,29 +32,7 @@ function HybridVideoPlayer() {
         playsInline
         preload="metadata"
         controls={false}
-        onError={handleVideoError}
         onLoadedData={handleVideoLoad}
-        onLoadStart={handleVideoLoadStart}
-        onCanPlay={() => {
-          console.log('▶️ Video can play');
-          setDebugInfo('Video can play');
-        }}
-        onLoadedMetadata={() => {
-          console.log('📊 Video metadata loaded');
-          setDebugInfo('Metadata loaded');
-        }}
-        onSuspend={() => {
-          console.log('⏸️ Video suspended');
-          setDebugInfo('Video suspended');
-        }}
-        onWaiting={() => {
-          console.log('⏳ Video waiting');
-          setDebugInfo('Video waiting...');
-        }}
-        onStalled={() => {
-          console.log('🛑 Video stalled');
-          setDebugInfo('Video stalled');
-        }}
       >
         {/* Local video as primary (reliable in Vercel) */}
         <source src="/videos/8762941-uhd_3840_2160_25fps.mp4" type="video/mp4" />
@@ -137,30 +44,6 @@ function HybridVideoPlayer() {
           <small>URL: https://osrsbb69ubtntroe.public.blob.vercel-storage.com/8762941-uhd_3840_2160_25fps.mp4</small>
         </div>
       </video>
-      {videoError && (
-        <div style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          backgroundColor: 'rgba(0,0,0,0.8)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          borderRadius: '18px',
-          color: 'white',
-          fontSize: '14px',
-          cursor: 'pointer'
-        }}
-        onClick={() => setUseYouTube(true)}
-        >
-          <div style={{ textAlign: 'center' }}>
-            <div>Error cargando video desde Vercel Blob</div>
-            <div style={{ fontSize: '12px', marginTop: '8px', opacity: 0.8 }}>Click para usar YouTube</div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
