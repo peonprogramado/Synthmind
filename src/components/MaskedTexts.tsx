@@ -102,7 +102,7 @@ function HybridVideoPlayer() {
         <source src="https://osrsbb69ubtntroe.public.blob.vercel-storage.com/8762941-uhd_3840_2160_25fps.mp4" type="video/mp4" />
         {/* Fallback para navegadores que no soportan video */}
         <div style={{ color: 'white', padding: '20px', textAlign: 'center' }}>
-          Video no disponible<br/>
+          Video no disponible<br />
           <small>URL: https://osrsbb69ubtntroe.public.blob.vercel-storage.com/8762941-uhd_3840_2160_25fps.mp4</small>
         </div>
       </video>
@@ -467,7 +467,7 @@ export default function MaskedTexts() {
         }
       }
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -851,7 +851,7 @@ function StickyAnimatedVideo() {
 }
 
 // VideoContent ahora es un componente puro, sin hooks
-type VideoItem = 
+type VideoItem =
   | { type: 'local'; src: string }
   | { type: 'youtube'; id: string };
 
@@ -862,7 +862,7 @@ interface VideoContentProps {
 }
 function VideoContent({ videoIdx, videos, videoTitles }: VideoContentProps) {
   const currentVideo = videos[videoIdx];
-  
+
   return (
     <>
       <AnimatePresence mode="wait">
@@ -891,13 +891,13 @@ function VideoContent({ videoIdx, videos, videoTitles }: VideoContentProps) {
             transition={{ duration: 1 }}
           >
             <div className="relative w-full h-full">
-              <OptimizedYouTubeEmbed 
-                videoId={currentVideo.id} 
+              <OptimizedYouTubeEmbed
+                videoId={currentVideo.id}
                 className="w-full h-full block aspect-[16/9]"
               />
               {/* Fallback link - solo en esquina inferior derecha */}
               <div className="absolute bottom-2 right-2 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none hover:pointer-events-auto">
-                <a 
+                <a
                   href={`https://www.youtube.com/watch?v=${currentVideo.id}`}
                   target="_blank"
                   rel="noopener noreferrer"
