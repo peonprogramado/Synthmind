@@ -16,7 +16,11 @@ export const metadata: Metadata = {
   title: "SynthMind",
   description: "SynthMind - AI-powered design and development",
   icons: {
-    icon: "/favicon/412027564_11590605.png",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon.png", type: "image/png" },
+    ],
+    apple: "/favicon.png",
   },
 };
 
@@ -28,6 +32,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* Favicon links for better compatibility */}
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/favicon.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/favicon.png" />
         {/* Preconnect para YouTube - acelera la carga */}
         <link rel="preconnect" href="https://www.youtube-nocookie.com" />
         <link rel="preconnect" href="https://i.ytimg.com" />
