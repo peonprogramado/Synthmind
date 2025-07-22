@@ -1,18 +1,80 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { gsap } from "gsap";
-import { SplitText } from "gsap/SplitText";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion';
+import { gsap } from 'gsap';
+import { SplitText } from 'gsap/SplitText';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 // import { Player } from "@lottiefiles/react-lottie-player";
 import Lottie from "lottie-react";
 import GradientText from "./GradientText";
 import VRVerticalButtons, { BUTTONS } from "./VRVerticalButtons";
 
-import { AnimatePresence, motion, useScroll, useTransform, useSpring } from 'framer-motion';
-
 
 gsap.registerPlugin(SplitText, ScrollTrigger);
+
+// Componente YouTube optimizado con lazy loading
+function OptimizedYouTubeEmbed({ videoId, className }: { videoId: string; className?: string }) {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [isInView, setIsInView] = useState(false);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Intersection Observer para lazy loading
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '100px' } // Cargar 100px antes de ser visible
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  const handleLoad = useCallback(() => {
+    setIsLoaded(true);
+  }, []);
+
+  return (
+    <div ref={containerRef} className={className}>
+      {isInView ? (
+        <>
+          {/* Placeholder mientras carga */}
+          {!isLoaded && (
+            <div className="absolute inset-0 bg-gray-900 flex items-center justify-center">
+              <div className="text-white text-sm opacity-75">Cargando video...</div>
+            </div>
+          )}
+          <iframe
+            ref={iframeRef}
+            src={`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3&cc_load_policy=0&fs=0&disablekb=1`}
+            className="w-full h-full block aspect-[16/9]"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            referrerPolicy="strict-origin-when-cross-origin"
+            allowFullScreen
+            loading="lazy"
+            onLoad={handleLoad}
+            onError={() => console.log(`Error loading video: ${videoId}`)}
+          />
+        </>
+      ) : (
+        // Thumbnail placeholder antes de cargar
+        <div className="w-full h-full bg-gray-900 flex items-center justify-center">
+          <div className="text-white text-sm opacity-75">Video listo para cargar</div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 // Componente de video para 8762941-uhd_3840_2160_25fps.mp4
 function HybridVideoPlayer() {
@@ -793,14 +855,9 @@ function VideoContent({ videoIdx, videos, videoTitles }: VideoContentProps) {
             exit={{ opacity: 0 }}
             transition={{ duration: 1 }}
           >
-            <iframe
-              src={`https://www.youtube.com/embed/${currentVideo.id}?autoplay=1&mute=1&loop=1&playlist=${currentVideo.id}&controls=0&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3&cc_load_policy=0&fs=0&disablekb=1&enablejsapi=1`}
-              className="w-full h-full block aspect-[16/9]"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              referrerPolicy="strict-origin-when-cross-origin"
-              allowFullScreen
-              onError={() => console.log(`Error loading video: ${currentVideo.id}`)}
+            <OptimizedYouTubeEmbed 
+              videoId={currentVideo.id} 
+              className="w-full h-full block aspect-[16/9] relative"
             />
             {/* Fallback overlay for unavailable videos */}
             <div className="absolute inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
