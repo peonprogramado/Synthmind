@@ -112,6 +112,7 @@ function HybridVideoPlayer() {
 
 export default function MaskedTexts() {
   const [selectedIdx, setSelectedIdx] = useState(0);
+  const [cardAnimations, setCardAnimations] = useState([false, false, false]);
 
   const maskedTechRef = useRef<HTMLSpanElement | null>(null);
   const techAnimated = useRef(false);
@@ -266,7 +267,41 @@ export default function MaskedTexts() {
   const [lottieError1, setLottieError1] = useState(false);
   const [lottieData2, setLottieData2] = useState<object | null>(null);
   const [lottieError2, setLottieError2] = useState(false);
+
   const cardRefs = [useRef<HTMLDivElement | null>(null), useRef<HTMLDivElement | null>(null), useRef<HTMLDivElement | null>(null)];
+
+  // Intersection Observer para animaciones de cards
+  useEffect(() => {
+    const observerOptions = {
+      threshold: 0.3, // Activar cuando el 30% de la card es visible
+      rootMargin: '0px 0px -50px 0px' // Activar un poco antes de que sea completamente visible
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const cardIndex = parseInt(entry.target.getAttribute('data-card-index') || '0');
+          setCardAnimations(prev => {
+            const newAnimations = [...prev];
+            newAnimations[cardIndex] = true;
+            return newAnimations;
+          });
+          observer.unobserve(entry.target); // Solo animar una vez
+        }
+      });
+    }, observerOptions);
+
+    // Observar todas las cards
+    cardRefs.forEach((ref, index) => {
+      if (ref.current) {
+        ref.current.setAttribute('data-card-index', index.toString());
+        observer.observe(ref.current);
+      }
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   const cardTitleRefs = [useRef<HTMLHeadingElement | null>(null), useRef<HTMLHeadingElement | null>(null), useRef<HTMLHeadingElement | null>(null)];
   const cardTextRefs = [useRef<HTMLParagraphElement | null>(null), useRef<HTMLParagraphElement | null>(null), useRef<HTMLParagraphElement | null>(null)];
 
@@ -572,7 +607,7 @@ export default function MaskedTexts() {
 
       {/* Tarjetas negras */}
       <div className="flex justify-between w-full">
-        <div ref={cardRefs[0]} className="w-[368px] h-[423px] bg-black rounded-[20px] relative">
+        <div ref={cardRefs[0]} className={`w-[368px] h-[423px] bg-black rounded-[20px] relative ${cardAnimations[0] ? 'animate__animated animate__fadeInUp' : 'opacity-0'}`}>
           <div className="card-inner w-full h-full">
             <div className="absolute left-[30px] top-[60px] w-[120px] h-[120px] bg-transparent flex items-center justify-center lottie-fade">
               {lottieError2 && (
@@ -586,7 +621,7 @@ export default function MaskedTexts() {
             </p>
           </div>
         </div>
-        <div ref={cardRefs[1]} className="w-[368px] h-[423px] bg-black rounded-[20px] relative">
+        <div ref={cardRefs[1]} className={`w-[368px] h-[423px] bg-black rounded-[20px] relative ${cardAnimations[1] ? 'animate__animated animate__fadeInUp' : 'opacity-0'}`}>
           <div className="card-inner w-full h-full">
             <div className="absolute left-[30px] top-[60px] w-[120px] h-[120px] bg-transparent flex items-center justify-center lottie-fade">
               {lottieError && (
@@ -600,7 +635,7 @@ export default function MaskedTexts() {
             </p>
           </div>
         </div>
-        <div ref={cardRefs[2]} className="w-[368px] h-[423px] bg-black rounded-[20px] relative">
+        <div ref={cardRefs[2]} className={`w-[368px] h-[423px] bg-black rounded-[20px] relative ${cardAnimations[2] ? 'animate__animated animate__fadeInUp' : 'opacity-0'}`}>
           <div className="card-inner w-full h-full">
             <div className="absolute left-[30px] top-[60px] w-[120px] h-[120px] bg-transparent flex items-center justify-center lottie-fade">
               {lottieError1 && (
