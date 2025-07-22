@@ -855,21 +855,21 @@ function VideoContent({ videoIdx, videos, videoTitles }: VideoContentProps) {
             exit={{ opacity: 0 }}
             transition={{ duration: 1 }}
           >
-            <OptimizedYouTubeEmbed 
-              videoId={currentVideo.id} 
-              className="w-full h-full block aspect-[16/9] relative"
-            />
-            {/* Fallback overlay for unavailable videos */}
-            <div className="absolute inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
-              <div className="text-white text-center p-4">
-                <div className="text-sm opacity-75">Si el video no se muestra:</div>
+            <div className="relative w-full h-full">
+              <OptimizedYouTubeEmbed 
+                videoId={currentVideo.id} 
+                className="w-full h-full block aspect-[16/9]"
+              />
+              {/* Fallback link - solo en esquina inferior derecha */}
+              <div className="absolute bottom-2 right-2 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none hover:pointer-events-auto">
                 <a 
                   href={`https://www.youtube.com/watch?v=${currentVideo.id}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-400 hover:text-blue-300 underline text-sm mt-2 block"
+                  className="bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded hover:bg-opacity-90 transition-all duration-200 pointer-events-auto"
+                  title="Ver en YouTube si no se reproduce"
                 >
-                  Ver en YouTube ↗
+                  YouTube ↗
                 </a>
               </div>
             </div>
