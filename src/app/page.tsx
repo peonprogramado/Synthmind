@@ -10,8 +10,10 @@ import MaskedTexts from "../components/MaskedTexts";
 export default function Page() {
   return (
     <>
-      <div className="min-h-[2000px] bg-black text-white relative">
-        <NavbarMasked />
+      {/* Contenedor principal con ancho máximo fijo */}
+      <div className="w-full flex justify-center bg-black">
+        <div className="w-full max-w-[1160px] min-h-[2000px] bg-black text-white relative mx-auto">
+          <NavbarMasked />
         {/* Aurora Background Animation */}
         <div className="absolute inset-0 z-0">
           <Aurora
@@ -40,19 +42,24 @@ export default function Page() {
             </div>
           </div>
         </div>
+        </div>
       </div>
       {/* Sección de presentación */}
-      <section className="w-screen relative left-1/2 -translate-x-1/2 py-32 flex flex-col items-center bg-gradient-to-b from-white to-gray-100">
-        <h2 className="text-3xl font-bold mb-6 text-gray-900">Bienvenido a SynthMind Design</h2>
-        <p className="max-w-2xl text-lg text-gray-700 text-center">Somos especialistas en experiencias digitales, realidad virtual, motion graphics y soluciones creativas para empresas innovadoras. Descubre nuestro trabajo y cómo podemos ayudarte a destacar en el mundo digital.</p>
+      <section className="w-full py-32 flex justify-center bg-gradient-to-b from-white to-gray-100">
+        <div className="w-full max-w-[1160px] flex flex-col items-center px-4">
+          <h2 className="text-3xl font-bold mb-6 text-gray-900">Bienvenido a SynthMind Design</h2>
+          <p className="max-w-2xl text-lg text-gray-700 text-center">Somos especialistas en experiencias digitales, realidad virtual, motion graphics y soluciones creativas para empresas innovadoras. Descubre nuestro trabajo y cómo podemos ayudarte a destacar en el mundo digital.</p>
+        </div>
       </section>
       {/* Galería de imágenes */}
-      <section className="w-full py-24 px-4 bg-white flex flex-col items-center">
+      <section className="w-full py-24 flex justify-center bg-white">
+        <div className="w-full max-w-[1160px] px-4 flex flex-col items-center">
         <h3 className="text-2xl font-semibold mb-8 text-gray-900">Galería de proyectos</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl">
           <Image src="/images/aerps-com-pp8rmBQC7Yc-unsplash.jpg" alt="Proyecto 1" className="rounded-xl shadow-md object-cover w-full h-64" width={600} height={256} />
           <Image src="/images/aerps-com-pp8rmBQC7Yc-unsplash.jpg" alt="Proyecto 2" className="rounded-xl shadow-md object-cover w-full h-64" width={600} height={256} />
           <Image src="/images/aerps-com-pp8rmBQC7Yc-unsplash.jpg" alt="Proyecto 3" className="rounded-xl shadow-md object-cover w-full h-64" width={600} height={256} />
+        </div>
         </div>
       </section>
       <div className="h-[2000px]"></div>
