@@ -25,7 +25,18 @@ function HybridVideoPlayer() {
     console.log('🎥 HybridVideoPlayer mounted in environment:', process.env.NODE_ENV);
     console.log('🎥 Current URL:', window.location.href);
     setDebugInfo('Component mounted');
-  }, []);
+    
+    // Timeout para detectar si el video nunca carga (pantalla negra)
+    const timeout = setTimeout(() => {
+      if (!useYouTube && !videoError) {
+        console.warn('⏰ Video loading timeout - switching to YouTube');
+        setDebugInfo('Loading timeout - using YouTube');
+        setUseYouTube(true);
+      }
+    }, 10000); // 10 segundos
+    
+    return () => clearTimeout(timeout);
+  }, [useYouTube, videoError]);
   
   const handleVideoError = (e: any) => {
     console.error('🚨 VIDEO ERROR:');
@@ -35,10 +46,18 @@ function HybridVideoPlayer() {
     console.error('Video src:', e.target?.src);
     console.error('Network state:', e.target?.networkState);
     console.error('Ready state:', e.target?.readyState);
-    console.warn('Video error occurred - NOT switching to YouTube for debugging');
-    setDebugInfo(`Video error: ${e.target?.error?.code || 'Unknown'}`);
+    
+    // Check if it's a network error (404, etc.)
+    const errorCode = e.target?.error?.code;
+    if (errorCode === 4 || e.target?.networkState === 3) {
+      console.warn('🌐 Network error detected - switching to YouTube fallback');
+      setDebugInfo(`Network error (${errorCode}) - using YouTube`);
+      setUseYouTube(true);
+    } else {
+      console.warn('📹 Video format/codec error - keeping video element');
+      setDebugInfo(`Video error: ${errorCode || 'Unknown'}`);
+    }
     setVideoError(true);
-    // Temporarily disabled: setUseYouTube(true);
   };
 
   const handleVideoLoad = () => {

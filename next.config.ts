@@ -19,7 +19,7 @@ const nextConfig: NextConfig = {
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' https://i.ytimg.com https://img.youtube.com data: blob:",
               "connect-src 'self' https://www.youtube.com https://youtube.com https://www.youtube-nocookie.com",
-              "media-src 'self' data: blob: https://www.youtube.com https://youtube.com https://www.youtube-nocookie.com",
+              "media-src 'self' data: blob: * https://www.youtube.com https://youtube.com https://www.youtube-nocookie.com https://osrsbb69ubtntroe.public.blob.vercel-storage.com",
               "font-src 'self' data:",
               "object-src 'none'",
               "base-uri 'self'",
