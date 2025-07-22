@@ -18,22 +18,38 @@ gsap.registerPlugin(SplitText, ScrollTrigger);
 function HybridVideoPlayer() {
   const [useYouTube, setUseYouTube] = useState(false);
   const [videoError, setVideoError] = useState(false);
+  const [debugInfo, setDebugInfo] = useState('Initializing...');
+  
+  // Debug: Log cuando el componente se monta
+  useEffect(() => {
+    console.log('🎥 HybridVideoPlayer mounted in environment:', process.env.NODE_ENV);
+    console.log('🎥 Current URL:', window.location.href);
+    setDebugInfo('Component mounted');
+  }, []);
   
   const handleVideoError = (e: any) => {
-    console.error('🚨 VERCEL BLOB VIDEO ERROR:');
+    console.error('🚨 VIDEO ERROR:');
     console.error('Error event:', e);
     console.error('Error code:', e.target?.error?.code);
     console.error('Error message:', e.target?.error?.message);
     console.error('Video src:', e.target?.src);
     console.error('Network state:', e.target?.networkState);
     console.error('Ready state:', e.target?.readyState);
-    console.warn('Switching to YouTube fallback');
+    console.warn('Video error occurred - NOT switching to YouTube for debugging');
+    setDebugInfo(`Video error: ${e.target?.error?.code || 'Unknown'}`);
     setVideoError(true);
-    setUseYouTube(true);
+    // Temporarily disabled: setUseYouTube(true);
   };
 
   const handleVideoLoad = () => {
+    console.log('✅ Video loaded successfully!');
+    setDebugInfo('Video loaded successfully');
     setVideoError(false);
+  };
+  
+  const handleVideoLoadStart = () => {
+    console.log('🔄 Video load started');
+    setDebugInfo('Video loading started...');
   };
 
   if (useYouTube) {
@@ -54,6 +70,10 @@ function HybridVideoPlayer() {
 
   return (
     <div id="expanding-video" style={{ position: 'absolute', top: '120px', right: 0, width: '659px', height: '760px', display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-end', pointerEvents: 'none', paddingRight: '50px', transition: 'width 1s, left 1s, border-radius 1s' }}>
+      {/* Debug indicator */}
+      <div style={{ position: 'absolute', top: '-30px', right: '0', background: 'red', color: 'white', padding: '5px', fontSize: '12px', zIndex: 9999 }}>
+        {debugInfo} | YT: {useYouTube ? 'YES' : 'NO'} | Err: {videoError ? 'YES' : 'NO'}
+      </div>
       <video
         width="659"
         height="760"
@@ -66,11 +86,32 @@ function HybridVideoPlayer() {
         controls={false}
         onError={handleVideoError}
         onLoadedData={handleVideoLoad}
+        onLoadStart={handleVideoLoadStart}
+        onCanPlay={() => {
+          console.log('▶️ Video can play');
+          setDebugInfo('Video can play');
+        }}
+        onLoadedMetadata={() => {
+          console.log('📊 Video metadata loaded');
+          setDebugInfo('Metadata loaded');
+        }}
+        onSuspend={() => {
+          console.log('⏸️ Video suspended');
+          setDebugInfo('Video suspended');
+        }}
+        onWaiting={() => {
+          console.log('⏳ Video waiting');
+          setDebugInfo('Video waiting...');
+        }}
+        onStalled={() => {
+          console.log('🛑 Video stalled');
+          setDebugInfo('Video stalled');
+        }}
       >
-        {/* Vercel Blob Storage as primary (URL is accessible) */}
-        <source src="https://osrsbb69ubtntroe.public.blob.vercel-storage.com/8762941-uhd_3840_2160_25fps.mp4" type="video/mp4" />
-        {/* Local video as fallback */}
+        {/* Local video as primary (reliable in Vercel) */}
         <source src="/videos/8762941-uhd_3840_2160_25fps.mp4" type="video/mp4" />
+        {/* Vercel Blob Storage as secondary option */}
+        <source src="https://osrsbb69ubtntroe.public.blob.vercel-storage.com/8762941-uhd_3840_2160_25fps.mp4" type="video/mp4" />
         {/* Fallback para navegadores que no soportan video */}
         <div style={{ color: 'white', padding: '20px', textAlign: 'center' }}>
           Video no disponible<br/>
